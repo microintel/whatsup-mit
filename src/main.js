@@ -494,6 +494,11 @@ try {
   currentUser.email === "hackermitmys@gmail.com";
   
   if(isHacker){
+  
+  document
+  .getElementById("hacker-panel")
+  .style.display = "block";
+  
   alert("Hacker Dashboard Login");
   }
   
