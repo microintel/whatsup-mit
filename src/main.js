@@ -491,7 +491,7 @@ try {
   );
   
   const isHacker =
-  currentUser.email === "hacker@gmail.com";
+  currentUser.email === "hackermitmys@gmail.com";
   
   if(isHacker){
   alert("Hacker Dashboard Login");
