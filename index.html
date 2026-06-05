@@ -1,0 +1,1597 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta
+name="viewport"
+content="
+width=device-width,
+initial-scale=1,
+maximum-scale=1,
+user-scalable=no
+"/>
+<title>What's Up</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="manifest" href="/manifest.json" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+
+<style>
+:root{
+  --bg:#000;
+  --sidebar:#151516;
+  --card:#1b1b1d;
+  --hover:#232326;
+  --border:#2b2b2f;
+  --text:#10B981;
+  --muted:#9a9aa1;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,
+body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* APP */
+
+#app{
+  display:none;
+  width:100%;
+  height:100dvh;
+}
+
+#app.visible{
+  display:flex;
+}
+
+/* SIDEBAR */
+
+#sidebar{
+  width:320px;
+  min-width:320px;
+  background:var(--bg);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  transition:.25s;
+  z-index:100;
+}
+
+.sidebar-header{
+  height:70px;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  font-size:24px;
+  font-weight:700;
+  border-bottom:1px solid var(--border);
+}
+
+.user-strip{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+}
+
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.user-name{
+  font-size:14px;
+  font-weight:600;
+}
+
+.logout-btn{
+  margin-left:auto;
+  border:none;
+  background:var(--card);
+  color:white;
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.search-wrap{
+  padding:14px;
+  border-bottom:1px solid var(--border);
+}
+
+.search-wrap input{
+  width:100%;
+  height:46px;
+  border:none;
+  outline:none;
+  background:var(--card);
+  border-radius:12px;
+  padding:0 14px;
+  color:white;
+  font-size:14px;
+}
+
+.channels-label{
+  padding:14px 16px 8px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:600;
+}
+
+/* USER LIST */
+
+.channel-list{
+  flex:1;
+  overflow-y:auto;
+  padding:0 10px 10px;
+}
+
+.channel-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:.18s;
+  margin-bottom:4px;
+}
+
+.channel-item:hover{
+  background:var(--hover);
+}
+
+.channel-item.active{
+  background:#2b2b30;
+}
+
+.channel-item img{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.ch-info{
+  flex:1;
+  overflow:hidden;
+}
+
+.ch-name{
+  font-size:14px;
+  font-weight:600;
+}
+
+.ch-preview{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:3px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+/* CHAT */
+
+#chat-area{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg);
+}
+
+/* HEADER */
+
+.chat-header{
+  height:70px;
+  min-height:70px;
+  display:flex;
+  align-items:center;
+  padding:0 18px;
+  border-bottom:1px solid var(--border);
+  background:#151516;
+}
+
+.chat-header-info h2{
+  font-size:17px;
+}
+
+.chat-header-info p{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:2px;
+}
+
+.chat-header-actions{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:50px;
+}
+
+.icon-btn{
+  width:42px;
+  height:42px;
+  border:none;
+  border-radius:12px;
+  background:var(--card);
+  color:white;
+  cursor:pointer;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+/* MESSAGES */
+
+.messages-wrap{
+  flex:1;
+  overflow-y:auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.msg-row{
+  display:flex;
+  gap:10px;
+  max-width:72%;
+}
+
+.msg-row.me{
+  align-self:flex-end;
+  flex-direction:row-reverse;
+}
+
+.msg-avatar{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.msg-content{
+  display:flex;
+  flex-direction:column;
+}
+
+.msg-sender{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+
+.bubble{
+  background:#1f1f22;
+  padding:12px 14px;
+  border-radius:16px;
+  line-height:1.45;
+  font-size:14px;
+  word-break:break-word;
+}
+
+.msg-row.me .bubble{
+  background:white;
+  color:black;
+}
+
+.bubble-time{
+  font-size:11px;
+  color:#777;
+  margin-top:4px;
+}
+
+/* INPUT */
+
+.input-area{
+  padding:14px;
+  border-top:1px solid var(--border);
+  background:#151516;
+}
+
+.input-box{
+  display:flex;
+  align-items:flex-end;
+  gap:10px;
+  background:var(--card);
+  border-radius:16px;
+  padding:10px;
+}
+
+#msg-input{
+  flex:1;
+  border:none;
+  outline:none;
+  resize:none;
+  background:none;
+  color:white;
+  font-size:15px;
+  max-height:120px;
+}
+
+#send-btn{
+  width:44px;
+  height:44px;
+  border:none;
+  border-radius:50%;
+  background:white;
+  color:black;
+  cursor:pointer;
+  font-size:18px;
+}
+
+/* MOBILE MENU */
+
+#mobile-menu-btn{
+  position:fixed;
+  top:14px;
+  left:14px;
+  width:44px;
+  height:44px;
+  border:none;
+  border-radius:12px;
+  background:#1d1d1f;
+  color:white;
+  font-size:20px;
+  z-index:999;
+  display:none;
+}
+
+/* OVERLAY */
+
+#sidebar-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+  z-index:90;
+}
+
+#sidebar-overlay.show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* MOBILE */
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  #mobile-menu-btn{
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    position:fixed;
+
+    top:14px;
+    left:14px;
+
+    width:44px;
+    height:44px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#1d1d1f;
+
+    color:white;
+
+    font-size:20px;
+
+    z-index:999;
+  }
+
+  #sidebar{
+  position:fixed;
+  inset:0;
+  
+  width:100%;
+  height:100%;
+  
+  transform:translateX(-100%);
+  transition:.25s;
+  }
+  
+  #sidebar.open{
+  transform:translateX(0);
+  }
+
+#sidebar-overlay{
+  display:none;
+}
+
+  #sidebar.open{
+    left:0;
+  }
+
+  /* FIX HEADER SPACE */
+
+  .chat-header{
+    padding-left:74px;
+  }
+
+  /* FIX PROJECT NAME */
+
+  .sidebar-header{
+    padding-left:70px;
+  }
+
+  .messages-wrap{
+    padding:14px;
+  }
+
+  .msg-row{
+    max-width:92%;
+  }
+}
+
+
+/* LOGIN SCREEN */
+
+#login-screen{
+
+  position:fixed;
+  inset:0;
+
+  display:none;
+  align-items:center;
+  justify-content:center;
+
+  overflow:hidden;
+
+  background:var(--bg);
+}
+
+/* AUTH LOADING */
+
+#auth-loading{
+  position:fixed;
+  inset:0;
+  background:black;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  z-index:99999;
+
+  color:white;
+  font-size:18px;
+  font-weight:700;
+}
+
+/* BACKGROUND GLOW */
+
+.login-bg{
+  position:absolute;
+
+  width:500px;
+  height:500px;
+
+  background:var(--bg);
+
+  filter:blur(20px);
+
+  animation:
+  floatGlow 8s ease-in-out infinite;
+}
+
+@keyframes floatGlow{
+
+  0%{
+    transform:
+    translateY(0px)
+    scale(1);
+  }
+
+  50%{
+    transform:
+    translateY(-20px)
+    scale(1.08);
+  }
+
+  100%{
+    transform:
+    translateY(0px)
+    scale(1);
+  }
+}
+
+/* CARD */
+
+.login-card{
+  position:relative;
+  z-index:2;
+
+  width:92%;
+  max-width:420px;
+
+  padding:42px 34px;
+
+  border-radius:28px;
+
+  background:var(--bg);
+
+  border:
+  1px solid rgba(255,255,255,.06);
+
+  box-shadow:
+  0 10px 40px rgba(0,0,0,.4);
+
+  text-align:center;
+}
+
+/* LOGO */
+
+.login-logo{
+  width:82px;
+  height:82px;
+
+  margin:auto auto 22px;
+
+  border-radius:24px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:38px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #ffffff,
+    #d8d8d8
+  );
+
+  color:black;
+}
+
+/* TITLE */
+
+.login-card h1{
+  font-size:36px;
+  font-weight:800;
+
+  letter-spacing:-1px;
+
+  margin-bottom:10px;
+}
+
+/* TEXT */
+
+.login-card p{
+  color:#9b9ba1;
+
+  font-size:15px;
+
+  line-height:1.6;
+
+  margin-bottom:34px;
+}
+
+/* BUTTON */
+
+#google-login-btn{
+  width:100%;
+  height:56px;
+
+  border:none;
+
+  border-radius:16px;
+
+  background:white;
+
+  color:black;
+
+  font-size:15px;
+  font-weight:700;
+
+  cursor:pointer;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+
+  transition:.2s;
+}
+
+#google-login-btn:hover{
+
+  transform:
+  translateY(-1px);
+
+  box-shadow:
+  0 6px 18px rgba(255,255,255,.12);
+}
+
+#google-login-btn:active{
+  transform:scale(.98);
+}
+
+/* MOBILE */
+
+@media(max-width:480px){
+
+  .login-card{
+    padding:36px 24px;
+    border-radius:24px;
+  }
+
+  .login-card h1{
+    font-size:30px;
+  }
+
+  .login-logo{
+    width:72px;
+    height:72px;
+    font-size:32px;
+  }
+
+  #google-login-btn{
+    height:52px;
+    font-size:14px;
+  }
+}
+
+
+
+
+/* SIDEBAR CREDIT */
+
+.sidebar-credit{
+  padding:14px;
+
+  text-align:center;
+
+  font-size:12px;
+
+  color:var(--muted);
+
+  border-top:1px solid var(--border);
+
+  background:var(--bg);
+
+  letter-spacing:.4px;
+}
+
+
+/* CHAT BACKGROUND PARTICLES */
+
+#chat-area{
+  position:relative;
+  overflow:hidden;
+}
+
+.chat-particles{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  opacity:.45;
+}
+
+.messages-wrap,
+.chat-header,
+.input-area{
+  position:relative;
+  z-index:2;
+}
+
+#chat-header-desc{
+margin-l3ft:100px;
+color:red;
+font-weight:bold;
+}
+
+.call-btn{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:.2s;
+  color:white;
+  box-shadow:0 6px 18px rgba(0,0,0,.35);
+}
+
+.end-call{
+  background:linear-gradient(
+    135deg,
+    #ff4d4d,
+    #d40000
+  );
+
+  display:none;
+}
+/* END CALL */
+
+
+
+/* CALL BUTTONS */
+
+.call-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.call-btn{
+  width:50px;
+  height:50px;
+
+  border:none;
+  border-radius:16px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+  color:white;
+
+  position:relative;
+
+  overflow:hidden;
+}
+
+/* VOICE CALL */
+
+#voice-call-btn{
+
+  background:
+  linear-gradient(
+    135deg,
+    #10B981,
+    #059669
+  );
+
+  
+}
+
+#voice-call-btn:hover{
+
+  transform:
+  translateY(-2px)
+  scale(1.03);
+
+  
+}
+
+/* END CALL */
+
+#end-call-btn{
+
+  background:
+  linear-gradient(
+    135deg,
+    #ff4d4d,
+    #dc2626
+  );
+
+  
+
+  display:none;
+}
+
+#end-call-btn:hover{
+
+  transform:
+  translateY(-2px)
+  scale(1.03);
+
+  
+}
+
+/* ACTIVE CALL PULSE */
+
+
+
+
+
+
+/* =========================
+   MODERN CALL SCREEN
+========================= */
+
+#call-screen{
+  position:fixed;
+  inset:0;
+  z-index:9999999;
+
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  background-color:var(--bg);
+
+  color:white;
+
+  overflow:hidden;
+}
+
+/* background glow */
+
+.call-glow{
+  position:absolute;
+
+  width:350px;
+  height:350px;
+
+  border-radius:50%;
+
+  background:#10B981;
+
+  filter:blur(120px);
+
+  opacity:.18;
+
+  
+}
+
+
+
+/* profile */
+
+.call-profile{
+  position:relative;
+  z-index:2;
+
+  width:130px;
+  height:130px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+
+  border:4px solid rgba(255,255,255,.15);
+
+  box-shadow:
+  0 10px 40px rgba(0,0,0,.45);
+
+  margin-bottom:22px;
+}
+
+/* name */
+
+#call-user-name{
+  position:relative;
+  z-index:2;
+
+  font-size:30px;
+  font-weight:800;
+
+  margin-bottom:10px;
+}
+
+/* status */
+
+#call-status{
+  position:relative;
+  z-index:2;
+
+  color:#d1d5db;
+
+  font-size:15px;
+
+  margin-bottom:50px;
+
+  letter-spacing:.4px;
+}
+
+/* actions */
+
+.call-screen-actions{
+  position:relative;
+  z-index:2;
+
+  display:flex;
+  gap:24px;
+}
+
+/* buttons */
+
+.call-action-btn{
+
+  width:82px;
+  height:82px;
+
+  border:none;
+  border-radius:50%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:28px;
+
+  color:white;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.call-action-btn:hover{
+
+  transform:
+  scale(1.08);
+}
+
+.accept-call-ui{
+  background:#10B981;
+}
+
+.end-call-ui{
+  background:#ef4444;
+}
+
+/* pulse */
+
+@media(max-width:768px){
+
+  #chat-area.no-chat{
+    display:none;
+  }
+
+}
+
+
+#auth-loading{
+  position:fixed;
+  inset:0;
+
+  background:#10B981;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+.loading-text{
+  font-size:42px;
+  font-weight:800;
+
+  color:#000;
+
+  letter-spacing:-1px;
+
+  animation:float 2s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{
+    transform:translateY(0);
+    opacity:.8;
+  }
+
+  50%{
+    transform:translateY(-8px);
+    opacity:1;
+  }
+}
+
+
+</style>
+</head>
+
+<body>
+
+<audio id="remote-audio" autoplay></audio>
+
+<!-- LOGIN -->
+<div id="auth-loading">
+  <div class="loading-text">
+    What's Up
+  </div>
+</div>
+
+
+<div id="login-screen">
+
+  <div class="login-bg"></div>
+
+  <div class="login-card">
+
+
+    <h1>What's Up</h1>
+
+    <p>
+      Demo messaging app by MicroIntel • Under development • Improving security
+    </p>
+
+    <button id="google-login-btn">
+
+      <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 48 48">
+
+        <path fill="#FFC107"
+        d="M43.6 20.5H42V20H24v8h11.3C33.6 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12S17.4 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/>
+
+        <path fill="#FF3D00"
+        d="M6.3 14.7l6.6 4.8C14.7 16 19 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C34.1 6.1 29.3 4 24 4c-7.7 0-14.3 4.3-17.7 10.7z"/>
+
+        <path fill="#4CAF50"
+        d="M24 44c5.2 0 10-2 13.6-5.2l-6.3-5.2C29.3 35.1 26.8 36 24 36c-5.2 0-9.6-3.3-11.1-7.9l-6.5 5C9.7 39.5 16.3 44 24 44z"/>
+
+        <path fill="#1976D2"
+        d="M43.6 20.5H42V20H24v8h11.3c-1.1 3.1-3.3 5.6-6.3 7.1l6.3 5.2C39.6 36.5 44 30.8 44 24c0-1.3-.1-2.7-.4-3.5z"/>
+
+      </svg>
+
+      Legin with Google
+
+    </button>
+
+  </div>
+
+</div>
+
+<!-- ADD THIS INSIDE <body> ABOVE #app -->
+
+<button id="mobile-menu-btn">
+☰
+</button>
+
+<div id="sidebar-overlay"></div>
+<!-- APP -->
+
+<div id="app">
+
+  <!-- SIDEBAR -->
+
+  <aside id="sidebar">
+
+    <div class="sidebar-header">
+      What's Up
+    </div>
+
+    <div class="user-strip">
+
+      <div id="sidebar-avatar-wrap"></div>
+
+      <div class="user-name"
+      id="sidebar-username">
+      User
+      </div>
+
+      <div style="
+      display:flex;
+      gap:8px;
+      margin-left:auto;
+      ">
+      
+      <button
+      class="logout-btn"
+      id="delete-account-btn"
+      style="
+      background:#ff3b30;
+      ">
+      Delete
+      </button>
+      
+      <button
+      class="logout-btn"
+      id="logout-btn">
+      Logout
+      </button>
+      
+      </div>
+
+    </div>
+
+    <div class="search-wrap">
+
+      <input
+      type="text"
+      id="dm-search"
+      placeholder="Search user..." />
+
+    </div>
+
+    <div class="channels-label">
+      
+    </div>
+
+    <div
+    class="channel-list"
+    id="dm-list">
+    </div>
+    
+    <div class="sidebar-credit">
+    
+    <button
+    id="about-btn"
+    class="logout-btn"
+    style="
+    width:100%;
+    margin-top:10px;
+background-color:transparent;
+    ">
+    About Project
+    </button>
+    
+    Developed by MicroIntel
+    </div>
+
+  </aside>
+
+
+  <!-- CHAT -->
+
+  <main id="chat-area">
+
+    <div class="chat-header">
+
+      <div class="chat-header-info">
+
+        <h2 id="chat-header-name">
+          Select a user
+        </h2>
+
+        <p id="chat-header-desc">
+          Choose a person to chat
+        </p>
+
+      </div>
+
+      <div class="chat-header-actions">
+
+        <button
+        class="icon-btn"
+        id="clear-my-msgs">
+        🧹
+        </button>
+        
+        <button
+        class="icon-btn"
+        id="voice-call-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-plus" viewBox="0 0 16 16">
+        <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.68.68 0 0 0-.58-.122l-2.19.547a1.75 1.75 0 0 1-1.657-.459L5.482 8.062a1.75 1.75 0 0 1-.46-1.657l.548-2.19a.68.68 0 0 0-.122-.58zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z"/>
+        <path fill-rule="evenodd" d="M12.5 1a.5.5 0 0 1 .5.5V3h1.5a.5.5 0 0 1 0 1H13v1.5a.5.5 0 0 1-1 0V4h-1.5a.5.5 0 0 1 0-1H12V1.5a.5.5 0 0 1 .5-.5"/>
+        </svg>
+        </button>
+
+<button
+class="call-btn end-call"
+id="end-call-btn">
+<svg
+xmlns="http://www.w3.org/2000/svg"
+width="20"
+height="20"
+viewBox="0 0 24 24"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+stroke-linecap="round"
+stroke-linejoin="round">
+
+<path d="M10 14a3.5 3.5 0 0 1 4 0l4 3"/>
+
+<path d="M6 17l4-3"/>
+
+<path d="M2 10c5-5 15-5 20 0"/>
+
+</svg>
+</button>
+      </div>
+
+    </div>
+
+
+    <!-- MESSAGES -->
+
+    <div class="chat-particles" id="chat-particles"></div>
+    
+    <div
+    class="messages-wrap"
+    id="messages-wrap">
+    </div>
+
+
+    <!-- INPUT -->
+
+    <div class="input-area" id="input-area-nkn">
+<div id="reply-preview" style="
+display:none;
+padding:10px 14px;
+background:#1f1f22;
+border-left:4px solid #10B981;
+border-radius:12px;
+margin-bottom:10px;
+">
+
+  <div style="
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  ">
+
+    <div>
+
+      <div id="reply-name"
+      style="
+      font-size:12px;
+      color:#10B981;
+      font-weight:700;
+      ">
+      </div>
+
+      <div id="reply-text"
+      style="
+      font-size:13px;
+      color:#ccc;
+      margin-top:3px;
+      ">
+      </div>
+
+    </div>
+
+    <button id="cancel-reply"
+    style="
+    background:none;
+    border:none;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    ">
+    ✕
+    </button>
+
+  </div>
+
+</div>
+      <div class="input-box">
+
+        <textarea
+        id="msg-input"
+        rows="1"
+        placeholder="Message..."
+        disabled></textarea>
+
+        <button
+        id="send-btn"
+        disabled>
+        ᯓ➤
+        </button>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+<!-- ABOUT MODAL -->
+
+<div id="about-modal" style="
+position:fixed;
+inset:0;
+z-index:999999;
+display:none;
+align-items:center;
+justify-content:center;
+padding:20px;
+">
+
+<div style="
+width:100%;
+max-width:700px;
+max-height:85vh;
+overflow-y:auto;
+background:#111;
+border:1px solid #222;
+border-radius:24px;
+padding:25px;
+color:white;
+position:relative;
+">
+
+<button id="close-about" style="
+position:absolute;
+top:16px;
+right:16px;
+width:42px;
+height:42px;
+border:none;
+border-radius:50%;
+background:#1f1f22;
+color:white;
+font-size:18px;
+cursor:pointer;
+">
+✕
+</button>
+
+<h1 style="
+font-size:30px;
+color:#10B981;
+margin-bottom:16px;
+">
+About What's Up
+</h1>
+
+<p style="
+line-height:1.8;
+color:#ccc;
+">
+<b>What's Up</b> is a demo real-time messaging application developed by <b>MicroIntel</b> for educational and college project demonstration purposes.
+</p>
+
+<h2 style="color:#10B981;margin-top:22px;">
+🎓 College Project Demo
+</h2>
+
+<p style="line-height:1.8;color:#ccc;">
+This project was created mainly for <b>college project demonstration</b> and learning purposes. It showcases how modern messaging applications work using cloud databases and real-time communication technologies.
+</p>
+
+<h2 style="color:#10B981;margin-top:22px;">
+👨‍💻 Developed By
+</h2>
+
+<p style="line-height:1.8;color:#ccc;">
+<b>Developer:</b> MicroIntel<br>
+<b>Project:</b> What's Up<br>
+<b>Type:</b> Real-Time Messaging App<br>
+<b>Status:</b> Demo Version / Under Development
+</p>
+
+<h2 style="color:#10B981;margin-top:22px;">
+🎯 Why Developed
+</h2>
+
+<p style="line-height:1.8;color:#ccc;">
+The project was developed to understand and demonstrate:
+</p>
+
+<ul style="
+padding-left:20px;
+line-height:2;
+color:#ccc;
+">
+<li>Firebase Authentication</li>
+<li>Cloud Database Management</li>
+<li>Real-time Messaging</li>
+<li>Modern Mobile UI Design</li>
+<li>Responsive Web Development</li>
+<li>Frontend + Backend Integration</li>
+</ul>
+
+<h2 style="color:#10B981;margin-top:22px;">
+✨ Features
+</h2>
+
+<ul style="
+padding-left:20px;
+line-height:2;
+color:#ccc;
+">
+<li>Google Login</li>
+<li>Private Messaging</li>
+<li>Typing Status</li>
+<li>Reply to Messages</li>
+<li>Delete Messages</li>
+<li>Real-time Updates</li>
+<li>Search Users</li>
+<li>Firebase Cloud Storage</li>
+<li>Mobile Responsive UI</li>
+</ul>
+
+<h2 style="color:#10B981;margin-top:22px;">
+⚠ Limitations
+</h2>
+
+<ul style="
+padding-left:20px;
+line-height:2;
+color:#ccc;
+">
+<li>No group chat support</li>
+<li>No image/file sharing</li>
+<li>No voice/video calling</li>
+<li>No end-to-end encryption</li>
+<li>Internet required</li>
+<li>Still under development</li>
+</ul>
+
+<h2 style="color:#10B981;margin-top:22px;">
+⚠ Demo Notice
+</h2>
+
+<p style="
+line-height:1.8;
+color:#ccc;
+">
+This application is a <b>demo version</b> made for academic and project presentation purposes. Features and security may continue improving over time.
+</p>
+
+<div style="
+margin-top:30px;
+padding-top:14px;
+border-top:1px solid #222;
+text-align:center;
+color:#777;
+font-size:13px;
+">
+ MicroIntel • College Project Demo
+</div>
+
+</div>
+</div>
+<div id="toast"></div>
+<audio
+id="send-sound"
+src="https://raw.githubusercontent.com/microintel/endgram/main/audio/sent.mp3"
+preload="auto">
+</audio>
+<audio
+id="ringing-sound"
+loop
+src="https://microintel.github.io/endgram/audio/interstellar.mp3">
+</audio>
+
+<audio
+id="incoming-ringtone"
+loop
+src="https://microintel.github.io/endgram/audio/scam1992.mp3">
+</audio>
+<audio
+id="receive-sound"
+src="https://raw.githubusercontent.com/microintel/endgram/main/audio/rec.mp3"
+preload="auto">
+</audio>
+<div id="incoming-call-modal" style="
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.75);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:999999;
+">
+
+<div style="
+width:90%;
+max-width:340px;
+background:#111;
+border:1px solid #222;
+border-radius:28px;
+padding:30px;
+text-align:center;
+color:white;
+">
+
+<img
+id="caller-photo"
+src=""
+style="
+width:90px;
+height:90px;
+border-radius:50%;
+object-fit:cover;
+margin-bottom:16px;
+"
+/>
+
+<h2 id="caller-name">
+Incoming Call
+</h2>
+
+<p style="
+color:#999;
+margin-top:8px;
+margin-bottom:24px;
+">
+Nkn Vaice Call...
+</p>
+
+<div style="
+display:flex;
+justify-content:center;
+gap:18px;
+">
+
+<button id="reject-call-btn"
+style="
+width:60px;
+height:60px;
+border:none;
+border-radius:50%;
+background:#dc2626;
+color:white;
+font-size:22px;
+cursor:pointer;
+">
+✕
+</button>
+
+<button id="accept-call-btn"
+style="
+width:60px;
+height:60px;
+border:none;
+border-radius:50%;
+background:#10B981;
+color:white;
+font-size:22px;
+cursor:pointer;
+">
+📞
+</button>
+
+</div>
+
+</div>
+</div>
+<!-- MODERN CALL SCREEN -->
+
+<div id="call-screen">
+
+  <div class="call-glow"></div>
+
+  <img
+  id="call-user-photo"
+  class="call-profile"
+  src=""
+  />
+
+  <div id="call-user-name">
+    User
+  </div>
+
+  <div id="call-status">
+    Calling...
+  </div>
+
+  <div class="call-screen-actions">
+
+    <button
+    id="call-end-ui"
+    class="call-action-btn end-call-ui">
+      ✕
+    </button>
+
+  </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script type="module" src="src/main.js"></script>
+
+
+</body>
+</html>
