@@ -495,13 +495,14 @@ try {
   
   if(isHacker){
   
-  document
-  .getElementById("hacker-panel")
-  .style.display = "block";
+  const panel =
+  document.getElementById(
+  "hacker-panel"
+  );
+  
+  panel.style.display = "flex";
   
   loadHackerDashboard();
-  
-  alert("Hacker Dashboard Login");
   }
   
 
